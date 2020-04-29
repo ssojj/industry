@@ -1,10 +1,12 @@
-import json
-import requests
-import os
-import keyboard
+import json, requests, os, keyboard
 
-def help():
+#clear the console
+def clear():
 	os.system('cls')
+
+#print the help message
+def help():
+	clear()
 	print('Industry\n')
 	
 	print('SET UP: To start the game you are dealt three cards. Each suit '
@@ -21,29 +23,61 @@ def help():
 		+ 'of the game.\n\nSPENDING: To use cards as currency, discard '
 		+ 'cards until you pay the cost of the building, aces are worth '
 		+ '$1, numbers are worth thier amount (ex: a 7 is worth $7), and'
-		+ ' all face cards are worth $10.')
+		+ ' all face cards are worth $10.\n')
 	
 	print('1. Play')
 	print('2. Help')
 	print('Esc. Exit')
 	print('Press a key.')
 
-def menu(event):
-	if (event.name == '1'):
-		print('play')
-	elif (event.name == '2'):
-		help()
-
+#main loop
 def main():
-	os.system('cls')
+	state = 'menu'
+	hand = []
+	housing = 0
+	offices = 0
+	banks = 0
+	factories = 0
+	time = 0
+	score = 0
+	deck_id = ""
+	request = None
+	
+	clear()
 	print('Industry\n')
 	print('1. Play')
 	print('2. Help')
 	print('Esc. Exit')
 	print('Press a key.')
 	
-	keyboard.on_press(menu)
-	while True():
+	while (state != 'end'):
 	
-	
+		#menu
+		while (state == 'menu'):
+			event = keyboard.read_event()
+			if(event.event_type == 'down'):
+				if (event.name == '1'):
+					state = 'setup'
+				elif (event.name == '2'):
+					help()
+				elif (event.name == 'esc'):
+					state = 'end'
+					
+		if (state == 'setup'):
+			score = 0
+			time = 10
+			housing = 0
+			offices = 1
+			banks = 0
+			facotires = 1
+			
+			request = requests.get('https://deckofcardsapi.com/api/deck/new/')
+			
+			state = 'play'
+		
+		#play
+		while (state == 'play'):
+			clear()
+			print('Industry\n')
+			
 main()
